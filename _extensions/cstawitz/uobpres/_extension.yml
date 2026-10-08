@@ -1,0 +1,35 @@
+title: University of Birmingham Presentation
+author: Ella Kaye
+version: 1.0.0
+quarto-required: ">=1.6.0"
+contributes:
+  formats:
+    common:
+      knitr:
+        opts_chunk:
+          warning: false
+          message: false
+          fig.align: "center"
+          fig.show: "hold"
+      execute:
+        echo: true
+        code-overflow: wrap
+    revealjs:
+      theme: uobpres.scss
+      slide-number: true
+      callout-icon: true
+      title-slide-attributes:
+        data-background-color: "#1B1B1B"
+        data-background-image: title_slide_rebrand.png
+        data-background-size: 100%
+        data-background-position: bottom 0px right 10px
+      center-title-slide: false
+      preview-links: auto
+      link-external-newwindow: true
+      width: 1280
+      height: 720
+      keep-md: false
+      embed-resources: true
+      include-in-header:
+        - text: |
+            <link rel = "favicon" href = "favicon-32x32.png" />

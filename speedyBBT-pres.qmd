@@ -1,0 +1,62 @@
+---
+title: "Software improvements to speedyBBT, an R package for comparative judgment"
+author: "Christine Stawitz, Heather Turner, and Rowland Seymour"
+format: 
+    uobpres-revealjs: default
+---
+
+```{r echo = FALSE}
+require(remotes)
+remotes::install_github("rowlandseymour/speedyBBT")
+```
+
+## Introduction 
+
++ Web application allows judges to input comparative judgment data
++ R package for data analysis and parameter estimation
++ Making the package more user-friendly and adherent with R package practices
+
+## speedyBBT
+
++ Several forms of Bayesian Bradley-Terry model 
++ `speedyBBTm` uses Poly&a-Gamma latent variables to improve speed
++ `BBTm.ties` allows for ties
++ `BBTm` allows for comparison-specific and player-specific advantages 
+
+## Requested improvements
+
++ Use R objects to make model output use standard functions
++ Improve test coverage
++ Improve documentation
++ Make `pkgdown` site
+
+## Data objects
+
+
+```{r}
+library(speedyBBT)
+head("forcedMarriage")
+
+```
+
+## Model output
+
+```{r}
+#mod <- speedyBBTm()
+#summary(mod)
+
+```
+
+## `pkgdown` site
+
+```{=html}
+<iframe width="1080" height="500" src="https://rowlandseymour.com/speedyBBT/" title="speedyBBT Documentation", data-external="1"></iframe>
+```
+
+## New vignettes
+
+```{=html}
+<iframe width="1080" height="500" src="https://www.rowlandseymour.com/speedyBBT/articles/speedyBBT.html" title="speedyBBT Documentation", data-external="1"></iframe>
+```
+
+## Thank you!
