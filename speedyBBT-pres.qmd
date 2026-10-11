@@ -1,6 +1,6 @@
 ---
 title: "Software improvements to speedyBBT, an R package for comparative judgment"
-author: "Christine Stawitz, Heather Turner, and Rowland Seymour"
+author: "Christine Stawitz, Rowland Seymour, and Heather Turner"
 format: 
     uobpres-revealjs: default
 ---
@@ -8,55 +8,141 @@ format:
 ```{r echo = FALSE}
 require(remotes)
 remotes::install_github("rowlandseymour/speedyBBT")
+require(knitr)
 ```
 
 ## Introduction 
 
-+ Web application allows judges to input comparative judgment data
-+ R package for data analysis and parameter estimation
-+ Making the package more user-friendly and adherent with R package practices
++ Comparative judgment data collected through web interface or elsewhere
++ R package `speedyBBT` provides functions for data analysis and parameter estimation
++ Extendable output format for use with standard R functions and packages
 
-## speedyBBT
+```{mermaid style="width: 100%; height: 400px;"}
+flowchart LR
+  A(Comparative judgment interface) --> B(`speedyBBT` data format)
+  C(Manual data collection) --> B
+  B --> D[`speedyBBTm`]
+  B --> E[`BBTm.ties`]
+  B --> F[`BBTm`]
+  D --> G[Helper functions]
+  D --> H[`coda`]
+  D --> I[`bayesplot`]
+  E --> G
+  E --> H
+  E --> I
+  F --> G
+  F --> H
+  F --> I
+```
+
+## Data objects
+
+```{r}
+#| echo: TRUE
+#| table-caption: "First 5 rows of the forcedMarriage dataset"
+library(speedyBBT)
+kable(forcedMarriage$comparisons[1:5, ])
+```
+
+## Adjacency matrix
+
+```{r}
+#| echo: TRUE
+#| table-caption: "Upper left of the adjacency matrix for the forcedMarriage dataset"
+kable(forcedMarriage$adjacencyMatrix[1:5,1:5] )
+```
+
+# Model fitting functions
+
+## Model options
 
 + Several forms of Bayesian Bradley-Terry model 
 + `speedyBBTm` uses Poly&a-Gamma latent variables to improve speed
 + `BBTm.ties` allows for ties
 + `BBTm` allows for comparison-specific and player-specific advantages 
 
-## Requested improvements
-
-+ Use R objects to make model output use standard functions
-+ Improve test coverage
-+ Improve documentation
-+ Make `pkgdown` site
-
-## Data objects
-
+## Using a model fitting function
 
 ```{r}
-library(speedyBBT)
-head("forcedMarriage")
-
+#| echo: TRUE
+#| code-line-numbers: "1,2,3,4,5,6,7,8,9,10"
+expA <- expm::expm(forcedMarriage$adjacencyMatrix)
+prior.var <- diag(diag(expA)^-0.5) %*% expA %*% diag(diag(expA)^-0.5)
+set.seed(432)
+forcedMarriageModel <- speedyBBTm(
+  outcome = rep(1, length(forcedMarriage$comparisons$win)),
+  player1 = forcedMarriage$comparisons$win,
+  player2 = forcedMarriage$comparisons$lost,
+  player.prior.var = prior.var,
+  n.iter = 1000,
+  burn.in = 100
+)
 ```
 
-## Model output
+# Processing model output
+
+## Output model object now uses R S3 class system
+:::{.columns}
+
+:::{.column width = "50%"}
+```{r}
+#| echo: TRUE
+#| fig-alt: "Class of forcedMarriageModel"
+class(forcedMarriageModel)
+```
+:::
+:::{.column width = "50%"}
+::: incremental
++ use standard functions like `summary()` and `plot()`
++ use new parameter helper functions
++ integrate with `{bayesplot}`
+::: 
+:::
+:::
+
+## New parameter helper functions
+
++ `parameter()` returns a vector of posterior samples for a given parameter
+```{r}
+#| echo: TRUE
+#| fig-alt: "Posterior distribution of lambda"
+lambda <- parameter(forcedMarriageModel, "lambda", c(10,20))
+hist(lambda, main = "Posterior distribution of lambda", xlab = "lambda")
+```
+
+## Integration with `{bayesplot}`
+
++ allows for easy plotting of posterior distributions and diagnostics
 
 ```{r}
-#mod <- speedyBBTm()
-#summary(mod)
-
+#| echo: TRUE
+#| fig-alt: "Posterior distributions of lambda[10], lambda[20], lambda[30], lambda[40], and alpha.sq"
+library(bayesplot)
+bayesplot::mcmc_dens(forcedMarriageModel, pars = c("lambda[10]", "lambda[20]", "lambda[30]", "lambda[40]", "alpha.sq"))
 ```
+
+# Improved documentation
 
 ## `pkgdown` site
 
 ```{=html}
-<iframe width="1080" height="500" src="https://rowlandseymour.com/speedyBBT/" title="speedyBBT Documentation", data-external="1"></iframe>
+<iframe width="1200" height="700" src="https://www.rowlandseymour.com/speedyBBT/" title="speedyBBT Documentation", data-external="1"></iframe>
+
 ```
 
 ## New vignettes
 
 ```{=html}
-<iframe width="1080" height="500" src="https://www.rowlandseymour.com/speedyBBT/articles/speedyBBT.html" title="speedyBBT Documentation", data-external="1"></iframe>
+<iframe width="1200" height="700" src="https://www.rowlandseymour.com/speedyBBT/articles/speedyBBT.html" title="speedyBBT Documentation", data-external="1"></iframe>
 ```
 
-## Thank you!
+## Summary
+
++ `speedyBBT` provides functions for analysis of comparative judgment data
++ New model fitting functions and output format improve usability
++ Improved test coverage and documentation
+
+# Thank you! {.align-center}
+[
+  <img src="https://www.rowlandseymour.com/speedyBBT/logo.png" width="500" height="500" alt="speedyBBT logo">
+](https://www.rowlandseymour.com/speedyBBT/)
