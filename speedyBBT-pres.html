@@ -4178,18 +4178,18 @@ Christine Stawitz, Rowland Seymour, and Heather Turner
 <li>R package <code>speedyBBT</code> provides functions for data analysis and parameter estimation</li>
 <li>Extendable output format for use with standard R functions and packages</li>
 </ul>
-<div class="cell" data-reveal="true" data-fig-width="20" data-layout-align="default">
+<div class="cell" data-reveal="true" data-layout-align="default">
 <div class="cell-output-display">
 <div>
 <p></p><figure class><p></p>
 <div>
 <pre class="mermaid mermaid-js">flowchart LR
-  A(Comparative judgment interface &amp;embsp;) --&gt; B(&amp;embsp; `speedyBBT` data format)
-  C(Manual data collection &amp;embsp;) --&gt; B
+  A(&quot;Web interface&quot;) --&gt; B(Input format)
+  C(&quot;Data collection&quot;) --&gt; B
   B --&gt; D[`speedyBBTm`]
-  B --&gt; E[`BBTm.ties` &amp;embsp;]
+  B --&gt; E[`BBTm.ties`]
   B --&gt; F[`BBTm`]
-  D --&gt; G[&amp;embsp; Helper functions &amp;embsp;]
+  D --&gt; G[Helper functions]
   D --&gt; H[`coda`]
   D --&gt; I[`bayesplot`]
   E --&gt; G
@@ -5728,7 +5728,7 @@ window.QuartoSupport = function () {
         }
           var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
           var mailtoRegex = new RegExp(/^mailto:/);
-            var filterRegex = new RegExp('/' + window.location.host + '/');
+            var filterRegex = new RegExp("https:\/\/cstawitz\.github\.io\/testpres\/");
           var isInternal = (href) => {
               return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
           }

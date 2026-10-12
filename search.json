@@ -88,7 +88,7 @@
     "href": "speedyBBT-pres.html#introduction",
     "title": "Software improvements to speedyBBT, an R package for comparative judgment",
     "section": "Introduction",
-    "text": "Introduction\n\nComparative judgment data collected through web interface or elsewhere\nR package speedyBBT provides functions for data analysis and parameter estimation\nExtendable output format for use with standard R functions and packages\n\n\n\n\n\n\nflowchart LR\n  A(Comparative judgment interface &embsp;) --&gt; B(&embsp; `speedyBBT` data format)\n  C(Manual data collection &embsp;) --&gt; B\n  B --&gt; D[`speedyBBTm`]\n  B --&gt; E[`BBTm.ties` &embsp;]\n  B --&gt; F[`BBTm`]\n  D --&gt; G[&embsp; Helper functions &embsp;]\n  D --&gt; H[`coda`]\n  D --&gt; I[`bayesplot`]\n  E --&gt; G\n  E --&gt; H\n  E --&gt; I\n  F --&gt; G\n  F --&gt; H\n  F --&gt; I"
+    "text": "Introduction\n\nComparative judgment data collected through web interface or elsewhere\nR package speedyBBT provides functions for data analysis and parameter estimation\nExtendable output format for use with standard R functions and packages\n\n\n\n\n\n\nflowchart LR\n  A(\"Web interface\") --&gt; B(Input format)\n  C(\"Data collection\") --&gt; B\n  B --&gt; D[`speedyBBTm`]\n  B --&gt; E[`BBTm.ties`]\n  B --&gt; F[`BBTm`]\n  D --&gt; G[Helper functions]\n  D --&gt; H[`coda`]\n  D --&gt; I[`bayesplot`]\n  E --&gt; G\n  E --&gt; H\n  E --&gt; I\n  F --&gt; G\n  F --&gt; H\n  F --&gt; I"
   },
   {
     "objectID": "speedyBBT-pres.html#data-objects",
