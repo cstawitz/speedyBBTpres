@@ -88,7 +88,21 @@
     "href": "speedyBBT-pres.html#introduction",
     "title": "Software improvements to speedyBBT, an R package for comparative judgment",
     "section": "Introduction",
-    "text": "Introduction\n\nComparative judgment data collected through web interface or elsewhere\nR package speedyBBT provides functions for data analysis and parameter estimation\nExtendable output format for use with standard R functions and packages"
+    "text": "Introduction\n\nComparative judgment data collected using pairwise item comparison\nspeedyBBT package fits Bayesian Bradley-Terry models to the data\nNew version of speedyBBT provides more helper functions to process output\npkgdown website to support users with additional documentation"
+  },
+  {
+    "objectID": "speedyBBT-pres.html#terms",
+    "href": "speedyBBT-pres.html#terms",
+    "title": "Software improvements to speedyBBT, an R package for comparative judgment",
+    "section": "Terms",
+    "text": "Terms\n\nTwo items to be compared are called “players”#\n\nthis is changed to “items” in the new version of speedyBBT\n\nThe outcome of a comparison is called a “win” or “loss”\nEstimated parameters are called “qualities” of the players/items - \\(\\lambda\\)\nMany options for model-fitting including priors and formulas for player/item-specific advantages"
+  },
+  {
+    "objectID": "speedyBBT-pres.html#model-fitting-pipeline",
+    "href": "speedyBBT-pres.html#model-fitting-pipeline",
+    "title": "Software improvements to speedyBBT, an R package for comparative judgment",
+    "section": "Model fitting pipeline",
+    "text": "Model fitting pipeline"
   },
   {
     "objectID": "speedyBBT-pres.html#comparitive-judgment-interface",
@@ -98,32 +112,39 @@
     "text": "Comparitive judgment interface\n&lt;iframe width=“1200” height=“700” src=“https://cjdemo.bham.ac.uk/rank” title=“comparitive judgment interface”, data-external=“1”&gt;"
   },
   {
-    "objectID": "speedyBBT-pres.html#data-objects",
-    "href": "speedyBBT-pres.html#data-objects",
+    "objectID": "speedyBBT-pres.html#structure-of-data-items",
+    "href": "speedyBBT-pres.html#structure-of-data-items",
     "title": "Software improvements to speedyBBT, an R package for comparative judgment",
-    "section": "Data objects",
-    "text": "Data objects\n\nlibrary(speedyBBT)\nkable(forcedMarriage$comparisons[1:5, ])\n\n\n\n\nuser\ntime\nwin\nlost\n\n\n\n\n1\n16:08:26.316839\n67\n31\n\n\n1\n16:08:47.888894\n19\n9\n\n\n1\n16:09:14.093517\n18\n74\n\n\n1\n16:09:23.666987\n56\n68\n\n\n1\n16:09:42.930976\n50\n66"
+    "section": "Structure of data items",
+    "text": "Structure of data items\n\nlibrary(speedyBBT)\nstr(forcedMarriage)\n\nList of 3\n $ comparisons    :'data.frame':    1846 obs. of  4 variables:\n  ..$ user: int [1:1846] 1 1 1 1 1 1 1 1 1 1 ...\n  ..$ time: chr [1:1846] \"16:08:26.316839\" \"16:08:47.888894\" \"16:09:14.093517\" \"16:09:23.666987\" ...\n  ..$ win : int [1:1846] 67 19 18 56 50 53 60 17 47 2 ...\n  ..$ lost: int [1:1846] 31 9 74 68 66 15 24 10 71 69 ...\n $ wards          :Classes 'sf' and 'data.frame':   76 obs. of  4 variables:\n  ..$ NAME      : chr [1:76] \"Misterton  (County ward)\" \"Keyworth  (County ward)\" \"Bingham West  (County ward)\" \"Balderton  (County ward)\" ...\n  ..$ AREA_CODE : chr [1:76] \"CED\" \"CED\" \"CED\" \"CED\" ...\n  ..$ DESCRIPTIO: chr [1:76] \"County Electoral Division\" \"County Electoral Division\" \"County Electoral Division\" \"County Electoral Division\" ...\n  ..$ FILE_NAME : chr [1:76] \"NOTTINGHAMSHIRE_COUNTY\" \"NOTTINGHAMSHIRE_COUNTY\" \"NOTTINGHAMSHIRE_COUNTY\" \"NOTTINGHAMSHIRE_COUNTY\" ...\n $ adjacencyMatrix: num [1:76, 1:76] 0 0 0 0 0 0 0 1 0 0 ...\n\n\n\nkable(forcedMarriage$comparisons[1:5, ])\n\n\n\n\nuser\ntime\nwin\nlost\n\n\n\n\n1\n16:08:26.316839\n67\n31\n\n\n1\n16:08:47.888894\n19\n9\n\n\n1\n16:09:14.093517\n18\n74\n\n\n1\n16:09:23.666987\n56\n68\n\n\n1\n16:09:42.930976\n50\n66"
   },
   {
     "objectID": "speedyBBT-pres.html#adjacency-matrix",
     "href": "speedyBBT-pres.html#adjacency-matrix",
     "title": "Software improvements to speedyBBT, an R package for comparative judgment",
     "section": "Adjacency matrix",
-    "text": "Adjacency matrix\n\nkable(forcedMarriage$adjacencyMatrix[1:5,1:5] )\n\n\n\n\n0\n0\n0\n0\n0\n\n\n0\n0\n1\n0\n0\n\n\n0\n1\n0\n0\n0\n\n\n0\n0\n0\n0\n0\n\n\n0\n0\n0\n0\n0"
+    "text": "Adjacency matrix\n\nThis is a square matrix with rows and columns corresponding to the players/items\nWe assume adjacent items are more similar than non-adjacent items\nCan be used for prior variance\n\n\nkable(forcedMarriage$adjacencyMatrix[1:5,1:5] )\n\n\n\n\n0\n0\n0\n0\n0\n\n\n0\n0\n1\n0\n0\n\n\n0\n1\n0\n0\n0\n\n\n0\n0\n0\n0\n0\n\n\n0\n0\n0\n0\n0"
   },
   {
     "objectID": "speedyBBT-pres.html#model-options",
     "href": "speedyBBT-pres.html#model-options",
     "title": "Software improvements to speedyBBT, an R package for comparative judgment",
     "section": "Model options",
-    "text": "Model options\n\nSeveral forms of Bayesian Bradley-Terry model\nspeedyBBTm uses Poly&a-Gamma latent variables to improve speed\nBBTm.ties allows for ties\nBBTm allows for comparison-specific and player-specific advantages"
+    "text": "Model options\n\nSeveral forms of Bayesian Bradley-Terry model\nspeedyBBTm uses Polyá-Gamma latent variables to improve speed\nBBTm.ties allows for ties in comparisons\nBBTm allows for comparison-specific and player-specific advantages"
   },
   {
     "objectID": "speedyBBT-pres.html#using-a-model-fitting-function",
     "href": "speedyBBT-pres.html#using-a-model-fitting-function",
     "title": "Software improvements to speedyBBT, an R package for comparative judgment",
     "section": "Using a model fitting function",
-    "text": "Using a model fitting function\n\nexpA &lt;- expm::expm(forcedMarriage$adjacencyMatrix)\nprior.var &lt;- diag(diag(expA)^-0.5) %*% expA %*% diag(diag(expA)^-0.5)\nset.seed(432)\nforcedMarriageModel &lt;- speedyBBTm(\n  outcome = rep(1, length(forcedMarriage$comparisons$win)),\n  player1 = forcedMarriage$comparisons$win,\n  player2 = forcedMarriage$comparisons$lost,\n  player.prior.var = prior.var,\n  n.iter = 1000,\n  burn.in = 100\n)"
+    "text": "Using a model fitting function\n\nexpA &lt;- expm::expm(forcedMarriage$adjacencyMatrix)\nprior.var &lt;- diag(diag(expA)^-0.5) %*% expA %*% diag(diag(expA)^-0.5)\n\nset.seed(432)\n\nforcedMarriageModel &lt;- speedyBBTm(\n  outcome = rep(1, length(forcedMarriage$comparisons$win)),\n  player1 = forcedMarriage$comparisons$win,\n  player2 = forcedMarriage$comparisons$lost,\n  player.prior.var = prior.var,\n  n.iter = 1000,\n  burn.in = 100\n)"
+  },
+  {
+    "objectID": "speedyBBT-pres.html#using-a-model-fitting-function-1",
+    "href": "speedyBBT-pres.html#using-a-model-fitting-function-1",
+    "title": "Software improvements to speedyBBT, an R package for comparative judgment",
+    "section": "Using a model fitting function",
+    "text": "Using a model fitting function\n\nexpA &lt;- expm::expm(forcedMarriage$adjacencyMatrix)\nprior.var &lt;- diag(diag(expA)^-0.5) %*% expA %*% diag(diag(expA)^-0.5)\n\nset.seed(432)\n\nforcedMarriageModel &lt;- speedyBBTm(\n  outcome = rep(1, length(forcedMarriage$comparisons$win)),\n  player1 = forcedMarriage$comparisons$win,\n  player2 = forcedMarriage$comparisons$lost,\n  player.prior.var = prior.var,\n  n.iter = 1000,\n  burn.in = 100\n)"
   },
   {
     "objectID": "speedyBBT-pres.html#output-model-object-now-uses-r-s3-class-system",
