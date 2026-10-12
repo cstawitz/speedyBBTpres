@@ -151,7 +151,7 @@
     "href": "speedyBBT-pres.html#output-model-uses-r-to-improve-output-processing",
     "title": "Software improvements to speedyBBT, an R package for comparative judgment",
     "section": "Output model uses R to improve output processing",
-    "text": "Output model uses R to improve output processing\n\n\n\nclass(forcedMarriageModel)\n\n[1] \"mcmc\"\n\n\n\n\nStandard functions like summary() and plot()\nFunctions developed to work with mcmc objects from the {coda} package\nCommon plotting functions provided by packages like {bayesplot}"
+    "text": "Output model uses R to improve output processing\n\n\nclass(forcedMarriageModel)\n\n[1] \"mcmc\"\n\n\n\n\nStandard functions like summary() and plot()\nFunctions developed to work with mcmc objects from the {coda} package\nCommon plotting functions provided by packages like {bayesplot}"
   },
   {
     "objectID": "speedyBBT-pres.html#plot_abilities-function",
