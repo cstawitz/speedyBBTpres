@@ -88,14 +88,14 @@
     "href": "speedyBBT-pres.html#introduction",
     "title": "Software improvements to speedyBBT, an R package for comparative judgment",
     "section": "Introduction",
-    "text": "Introduction\n\nComparative judgment data collected using pairwise item comparison\nspeedyBBT package fits Bayesian Bradley-Terry models to the data\nNew version of speedyBBT provides more helper functions to process output\npkgdown website to support users with additional documentation"
+    "text": "Introduction\n\nComparative judgment data analysis tool\nspeedyBBT package fits Bayesian Bradley-Terry models to the data\nNew version of speedyBBT adds more user-friendly features\nA website with more examples to help users get started with the package"
   },
   {
-    "objectID": "speedyBBT-pres.html#terms",
-    "href": "speedyBBT-pres.html#terms",
+    "objectID": "speedyBBT-pres.html#definitions",
+    "href": "speedyBBT-pres.html#definitions",
     "title": "Software improvements to speedyBBT, an R package for comparative judgment",
-    "section": "Terms",
-    "text": "Terms\n\nItems for comparison are called “items”\nThe outcome of a comparison is called a “win” or “loss”\nEstimated parameters are called “qualities” of the players/items - \\(\\lambda\\)\nMany options for model-fitting including priors and formulas for player/item-specific advantages"
+    "section": "Definitions",
+    "text": "Definitions\n\nItems being compared are called “items”\nThe outcome of a comparison is called a “win” or “loss”\nEstimated parameters are called “qualities” of the players/items\n\nDesignated by lambda (\\(\\lambda\\))\n\nMany options for model-fitting including prior information, parameters, and player/item-specific advantages"
   },
   {
     "objectID": "speedyBBT-pres.html#model-fitting-pipeline",
@@ -109,7 +109,7 @@
     "href": "speedyBBT-pres.html#comparative-judgment-interface",
     "title": "Software improvements to speedyBBT, an R package for comparative judgment",
     "section": "Comparative judgment interface",
-    "text": "Comparative judgment interface\n\nCJI.png"
+    "text": "Comparative judgment interface\n\nhttps://cjdemo.bham.ac.uk/rank"
   },
   {
     "objectID": "speedyBBT-pres.html#structure-of-data-items",
@@ -123,14 +123,14 @@
     "href": "speedyBBT-pres.html#adjacency-matrix",
     "title": "Software improvements to speedyBBT, an R package for comparative judgment",
     "section": "Adjacency matrix",
-    "text": "Adjacency matrix\n\nThis is a square matrix with rows and columns corresponding to the players/items\nWe assume adjacent items are more similar than non-adjacent items\nCan be used for prior variance\n\n\nkable(forcedMarriage$adjacencyMatrix[1:5,1:5] )\n\n\n\n\n0\n0\n0\n0\n0\n\n\n0\n0\n1\n0\n0\n\n\n0\n1\n0\n0\n0\n\n\n0\n0\n0\n0\n0\n\n\n0\n0\n0\n0\n0"
+    "text": "Adjacency matrix\n\nThis is a square matrix with rows and columns corresponding to the players/items\nWe assume adjacent items are more similar than non-adjacent items\nUsed for prior variance-covariance matrix\n\n\nkable(forcedMarriage$adjacencyMatrix[1:5,1:5] )\n\n\n\n\n0\n0\n0\n0\n0\n\n\n0\n0\n1\n0\n0\n\n\n0\n1\n0\n0\n0\n\n\n0\n0\n0\n0\n0\n\n\n0\n0\n0\n0\n0"
   },
   {
     "objectID": "speedyBBT-pres.html#model-options",
     "href": "speedyBBT-pres.html#model-options",
     "title": "Software improvements to speedyBBT, an R package for comparative judgment",
     "section": "Model options",
-    "text": "Model options\n\nSeveral forms of Bayesian Bradley-Terry model\nspeedyBBTm uses Polyá-Gamma latent variables to improve speed\nBBTm.ties allows for ties in comparisons\nBBTm allows for comparison-specific and player-specific advantages"
+    "text": "Model options\n\nSeveral forms of Bayesian Bradley-Terry model\nspeedyBBTm improves speed without ties or advantages\nBBTm.ties allows for ties in comparisons\nBBTm allows for comparison-specific and player-specific advantages"
   },
   {
     "objectID": "speedyBBT-pres.html#using-a-model-fitting-function",
@@ -140,39 +140,39 @@
     "text": "Using a model fitting function\n\nexpA &lt;- expm::expm(forcedMarriage$adjacencyMatrix)\nprior.var &lt;- diag(diag(expA)^-0.5) %*% expA %*% diag(diag(expA)^-0.5)\n\nset.seed(432)\n\nforcedMarriageModel &lt;- speedyBBTm(\n  outcome = rep(1, length(forcedMarriage$comparisons$win)),\n  item1 = forcedMarriage$comparisons$win,\n  item2 = forcedMarriage$comparisons$lost,\n  item.prior.var = prior.var,\n  n.iter = 1000,\n  burn.in = 100\n)"
   },
   {
-    "objectID": "speedyBBT-pres.html#if-your-data-includes-an-advantage",
-    "href": "speedyBBT-pres.html#if-your-data-includes-an-advantage",
+    "objectID": "speedyBBT-pres.html#with-advantage",
+    "href": "speedyBBT-pres.html#with-advantage",
     "title": "Software improvements to speedyBBT, an R package for comparative judgment",
-    "section": "If your data includes an advantage",
-    "text": "If your data includes an advantage\n\nwimbledonModel &lt;- BBTm(\n  outcome = wimbledon$matches$outcome,\n  item2 = wimbledon$matches$loser,\n  item1 = wimbledon$matches$winner,\n  advantage = wimbledon$matches$secondWeek,\n  formula = ~ rank + points,\n  data = wimbledon$players,\n  n.iter = 10, burn.in = 1, verbose = FALSE\n)"
+    "section": "With advantage",
+    "text": "With advantage\n\nwimbledonModel &lt;- BBTm(\n  outcome = wimbledon$matches$outcome,\n  item2 = wimbledon$matches$loser,\n  item1 = wimbledon$matches$winner,\n  advantage = wimbledon$matches$secondWeek,\n  formula = ~ rank + points,\n  data = wimbledon$players,\n  n.iter = 10, burn.in = 1, verbose = FALSE\n)"
   },
   {
-    "objectID": "speedyBBT-pres.html#output-model-object-now-uses-r-s3-class-system",
-    "href": "speedyBBT-pres.html#output-model-object-now-uses-r-s3-class-system",
+    "objectID": "speedyBBT-pres.html#output-model-uses-r-to-improve-output-processing",
+    "href": "speedyBBT-pres.html#output-model-uses-r-to-improve-output-processing",
     "title": "Software improvements to speedyBBT, an R package for comparative judgment",
-    "section": "Output model object now uses R S3 class system",
-    "text": "Output model object now uses R S3 class system\n\n\n\nclass(forcedMarriageModel)\n\n[1] \"mcmc\"\n\n\n\n\nuse standard functions like summary() and plot()\nuse any functions developed to work with mcmc objects\nintegrate with {bayesplot}"
+    "section": "Output model uses R to improve output processing",
+    "text": "Output model uses R to improve output processing\n\n\n\nclass(forcedMarriageModel)\n\n[1] \"mcmc\"\n\n\n\n\nStandard functions like summary() and plot()\nFunctions developed to work with mcmc objects from the {coda} package\nCommon plotting functions provided by packages like {bayesplot}"
   },
   {
     "objectID": "speedyBBT-pres.html#plot_abilities-function",
     "href": "speedyBBT-pres.html#plot_abilities-function",
     "title": "Software improvements to speedyBBT, an R package for comparative judgment",
     "section": "plot_abilities function",
-    "text": "plot_abilities function\n\nquality_table &lt;- plot_qualities(forcedMarriageModel, player_names = forcedMarriage$wards$NAME)"
+    "text": "plot_abilities function\n\npretty_names &lt;- gsub(\" (City ward)\", \"\", forcedMarriage$wards$NAME, fixed = TRUE)\npretty_names &lt;- gsub(\" (County ward)\", \"\", pretty_names, fixed = TRUE)\nquality_table &lt;- plot_qualities(forcedMarriageModel, \nitem_names = pretty_names, flip = TRUE)"
   },
   {
-    "objectID": "speedyBBT-pres.html#parameter-helper-functions",
-    "href": "speedyBBT-pres.html#parameter-helper-functions",
+    "objectID": "speedyBBT-pres.html#helper-function-for-model-output",
+    "href": "speedyBBT-pres.html#helper-function-for-model-output",
     "title": "Software improvements to speedyBBT, an R package for comparative judgment",
-    "section": "Parameter helper functions",
-    "text": "Parameter helper functions\n\nparameter() returns a vector of posterior samples for a given parameter\n\n\nlambda &lt;- parameter(forcedMarriageModel, \"lambda\", c(10,20))\nhist(lambda, main = \"Posterior distribution of lambda\", xlab = \"lambda\")"
+    "section": "Helper function for model output",
+    "text": "Helper function for model output\n\nparameter() returns a vector of posterior samples for a given parameter\n\n\nlambda &lt;- parameter(forcedMarriageModel, \"lambda\", c(10,20))\nhist(lambda, main = \"Posterior distribution of estimated abilities\", xlab = \"lambda\")"
   },
   {
-    "objectID": "speedyBBT-pres.html#integration-with-bayesplot",
-    "href": "speedyBBT-pres.html#integration-with-bayesplot",
+    "objectID": "speedyBBT-pres.html#compatibility-with-other-plotting-packages",
+    "href": "speedyBBT-pres.html#compatibility-with-other-plotting-packages",
     "title": "Software improvements to speedyBBT, an R package for comparative judgment",
-    "section": "Integration with {bayesplot}",
-    "text": "Integration with {bayesplot}\n\nallows for easy plotting of posterior distributions and diagnostics\n\n\nlibrary(bayesplot)\nbayesplot::mcmc_dens(forcedMarriageModel, pars = c(\"lambda[10]\", \"lambda[20]\", \"lambda[30]\", \"lambda[40]\", \"alpha.sq\"))"
+    "section": "Compatibility with other plotting packages",
+    "text": "Compatibility with other plotting packages\n\nAllows for easy plotting of posterior distributions and diagnostics\n\n\nlibrary(bayesplot)\nbayesplot::mcmc_intervals(forcedMarriageModel, \npars = c(\"lambda[10]\", \"lambda[20]\", \"lambda[30]\", \"lambda[40]\"))"
   },
   {
     "objectID": "speedyBBT-pres.html#pkgdown-site",
