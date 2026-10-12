@@ -5,28 +5,40 @@ format:
     uobpres-revealjs: default
 ---
 
-```{r echo = FALSE}
+```{r echo = FALSE, message=FALSE}
 require(remotes)
-remotes::install_github("rowlandseymour/speedyBBT")
+remotes::install_github("rowlandseymour/speedyBBT", ref = "player_item")
 require(knitr)
 ```
 
 ## Introduction 
 
-+ Comparative judgment data collected through web interface or elsewhere
-+ R package `speedyBBT` provides functions for data analysis and parameter estimation
-+ Extendable output format for use with standard R functions and packages
++ Comparative judgment data collected using pairwise item comparison
++ `speedyBBT` package fits Bayesian Bradley-Terry models to the data
++ New version of `speedyBBT` provides more helper functions to process output
++ `pkgdown` website to support users with additional documentation
 
-```{mermaid style="width: 100%; height: 400px;"}
+## Terms
+
++ Items for comparison are called "items"
++ The outcome of a comparison is called a "win" or "loss"
++ Estimated parameters are called "qualities" of the players/items - $\lambda$
++ Many options for model-fitting including priors and formulas for player/item-specific advantages
+
+
+## Model fitting pipeline
+
+```{mermaid}
+%%| mermaid-format: png
 flowchart LR
-  A(Comparative judgment interface) --> B(`speedyBBT` data format)
-  C(Manual data collection) --> B
-  B --> D[`speedyBBTm`]
-  B --> E[`BBTm.ties`]
-  B --> F[`BBTm`]
+  A("Web interface") --> B(Input format)
+  C("Data collection") --> B
+  B --> D[speedyBBTm]
+  B --> E[BBTm.ties]
+  B --> F[BBTm]
   D --> G[Helper functions]
-  D --> H[`coda`]
-  D --> I[`bayesplot`]
+  D --> H[coda]
+  D --> I[bayesplot]
   E --> G
   E --> H
   E --> I
@@ -35,16 +47,29 @@ flowchart LR
   F --> I
 ```
 
-## Data objects
+## Comparative judgment interface
+
+![CJI.png](https://cjdemo.bham.ac.uk/)
+
+## Structure of data items
 
 ```{r}
 #| echo: TRUE
-#| table-caption: "First 5 rows of the forcedMarriage dataset"
 library(speedyBBT)
+names(forcedMarriage)
+```
+
+```{r}
+#| echo: TRUE
+#| table-caption: "First 5 rows of the forcedMarriage comparisons dataset"
 kable(forcedMarriage$comparisons[1:5, ])
 ```
 
 ## Adjacency matrix
+
++ This is a square matrix with rows and columns corresponding to the players/items
++ We assume adjacent items are more similar than non-adjacent items
++ Can be used for prior variance
 
 ```{r}
 #| echo: TRUE
@@ -57,25 +82,41 @@ kable(forcedMarriage$adjacencyMatrix[1:5,1:5] )
 ## Model options
 
 + Several forms of Bayesian Bradley-Terry model 
-+ `speedyBBTm` uses Poly&a-Gamma latent variables to improve speed
-+ `BBTm.ties` allows for ties
++ `speedyBBTm` uses Polyá-Gamma latent variables to improve speed
++ `BBTm.ties` allows for ties in comparisons
 + `BBTm` allows for comparison-specific and player-specific advantages 
 
 ## Using a model fitting function
 
 ```{r}
 #| echo: TRUE
-#| code-line-numbers: "1,2,3,4,5,6,7,8,9,10"
 expA <- expm::expm(forcedMarriage$adjacencyMatrix)
 prior.var <- diag(diag(expA)^-0.5) %*% expA %*% diag(diag(expA)^-0.5)
+
 set.seed(432)
+
 forcedMarriageModel <- speedyBBTm(
   outcome = rep(1, length(forcedMarriage$comparisons$win)),
-  player1 = forcedMarriage$comparisons$win,
-  player2 = forcedMarriage$comparisons$lost,
-  player.prior.var = prior.var,
+  item1 = forcedMarriage$comparisons$win,
+  item2 = forcedMarriage$comparisons$lost,
+  item.prior.var = prior.var,
   n.iter = 1000,
   burn.in = 100
+)
+```
+
+## If your data includes an advantage
+
+```{r}
+#| echo: TRUE
+wimbledonModel <- BBTm(
+  outcome = wimbledon$matches$outcome,
+  item2 = wimbledon$matches$loser,
+  item1 = wimbledon$matches$winner,
+  advantage = wimbledon$matches$secondWeek,
+  formula = ~ rank + points,
+  data = wimbledon$players,
+  n.iter = 10, burn.in = 1, verbose = FALSE
 )
 ```
 
@@ -90,17 +131,26 @@ forcedMarriageModel <- speedyBBTm(
 #| fig-alt: "Class of forcedMarriageModel"
 class(forcedMarriageModel)
 ```
+
 :::
+
 :::{.column width = "50%"}
 ::: incremental
 + use standard functions like `summary()` and `plot()`
-+ use new parameter helper functions
++ use any functions developed to work with `mcmc` objects
 + integrate with `{bayesplot}`
 ::: 
 :::
 :::
 
-## New parameter helper functions
+## `plot_abilities` function
+
+```{r}
+#| echo: TRUE
+quality_table <- plot_qualities(forcedMarriageModel, player_names = forcedMarriage$wards$NAME)
+```
+
+## Parameter helper functions
 
 + `parameter()` returns a vector of posterior samples for a given parameter
 ```{r}
